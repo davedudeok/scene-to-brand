@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import * as Vibrant from 'node-vibrant';
+import * as Vibrant from 'node-vibrant/browser';
 import PaletteManager from './PaletteManager';
 
 export default function App() {
@@ -67,4 +67,3 @@ export default function App() {
     </main>
   );
 }
-EOF

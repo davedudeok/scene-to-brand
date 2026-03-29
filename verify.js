@@ -16,8 +16,9 @@ const server = http.createServer((req, res) => {
     res.setHeader('Content-Type', mimeTypes[ext] || 'text/plain');
     res.end(fs.readFileSync(filePath));
   } else {
-    res.statusCode = 404;
-    res.end('Not Found');
+    // SPA: Fallback to index.html for unknown routes
+    res.setHeader('Content-Type', 'text/html');
+    res.end(fs.readFileSync('dist/index.html'));
   }
 });
 server.listen(3000);
@@ -28,12 +29,17 @@ server.listen(3000);
   
   // Console logs
   page.on('console', msg => console.log('Browser Log:', msg.text()));
+  page.on('pageerror', err => console.log('Page Error:', err.message));
   
   await page.goto('http://localhost:3000/');
   
   await page.waitForLoadState('networkidle');
   const content = await page.textContent('#root');
   console.log('App Content:', content);
+  
+  // Take screenshot if needed
+  await page.screenshot({ path: 'screenshot.png' });
+  console.log('Screenshot taken.');
   
   await browser.close();
   server.close();
