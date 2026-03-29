@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import * as Vibrant from 'node-vibrant/dist/browser';
+import * as Vibrant from 'node-vibrant';
 import PaletteManager from './PaletteManager';
 
 export default function App() {
@@ -20,7 +20,7 @@ export default function App() {
         try {
           const img = e.target?.result as string;
           // Direct access for browser build
-          const v = new (Vibrant as any)(img);
+          const v = new (Vibrant as any).Vibrant(img);
           const palette = await v.getPalette();
           
           const colors = Object.values(palette)
