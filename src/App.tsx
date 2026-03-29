@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import * as Vibrant from 'node-vibrant';
+import * as Vibrant from 'node-vibrant/dist/browser';
 import PaletteManager from './PaletteManager';
 
 export default function App() {
@@ -19,8 +19,9 @@ export default function App() {
       reader.onload = async (e) => {
         try {
           const img = e.target?.result as string;
-          // Direct access for browser build
-          const v = new (Vibrant as any).Vibrant(img);
+          // Dynamically import to ensure compatibility in browser
+          const { Vibrant } = await import('node-vibrant/browser');
+          const v = new Vibrant(img);
           const palette = await v.getPalette();
           
           const colors = Object.values(palette)
