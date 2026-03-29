@@ -1,18 +1,10 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import App from './App';
 import './index.css';
 
-console.log('Mounting React...');
-
 const container = document.getElementById('root');
 if (container) {
-  ReactDOM.createRoot(container).render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  );
-  console.log('Mounted');
-} else {
-  console.error('No root!');
+  const root = createRoot(container);
+  root.render(<App />);
 }
