@@ -1,5 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import './index.css';
-ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
+
+console.log('Mounting App...');
+const container = document.getElementById('root');
+if (container) {
+  ReactDOM.createRoot(container).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+  console.log('App Mounted');
+} else {
+  console.error('Root element not found');
+}
