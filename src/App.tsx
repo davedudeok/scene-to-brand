@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
-import * as Vibrant from 'node-vibrant';
+import * as Vibrant from 'node-vibrant/dist/browser';
 import PaletteManager from './PaletteManager';
-
-// Fallback logic
-const VibrantLib = (Vibrant as any).Vibrant || (Vibrant as any).default || Vibrant;
 
 export default function App() {
   const [baseColors, setBaseColors] = useState<string[]>([]);
@@ -22,7 +19,8 @@ export default function App() {
       reader.onload = async (e) => {
         try {
           const img = e.target?.result as string;
-          const v = new VibrantLib(img);
+          // Direct access for browser build
+          const v = new (Vibrant as any)(img);
           const palette = await v.getPalette();
           
           const colors = Object.values(palette)
