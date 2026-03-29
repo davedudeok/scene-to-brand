@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import PaletteManager from './PaletteManager';
 
-// Using a lighter weight, CDN-friendly color thief or implementing a simple canvas-based one
-// to avoid the complex node-vibrant dependency issues in the browser build.
 const getDominantColors = async (imgSrc: string) => {
   return new Promise<string[]>((resolve) => {
     const img = new Image();
@@ -52,7 +50,7 @@ export default function App() {
   };
 
   return (
-    <main className="min-h-screen bg-[#FDFDFD] text-[#1A1A1A] font-light">
+    <div className="min-h-screen bg-[#FDFDFD] text-[#1A1A1A] font-light">
       <nav className="p-8 flex justify-between items-center border-b border-neutral-100">
         <h1 className="text-xl tracking-tighter uppercase">scene-to-brand</h1>
         <button className="text-xs uppercase tracking-widest hover:text-neutral-500">Support</button>
@@ -71,11 +69,11 @@ export default function App() {
       </section>
 
       {baseColors.length > 0 && (
-        <section className="px-8 pb-24 animate-in fade-in duration-1000">
+        <section className="px-8 pb-24">
           <PaletteManager baseColors={baseColors} />
         </section>
       )}
-    </main>
+    </div>
   );
 }
 EOF
