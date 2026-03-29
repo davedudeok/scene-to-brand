@@ -3,10 +3,16 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
 
+console.log('Mounting React...');
+
 const container = document.getElementById('root');
 if (container) {
-  const root = ReactDOM.createRoot(container);
-  root.render(<App />);
+  ReactDOM.createRoot(container).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+  console.log('Mounted');
 } else {
-  console.log('No root!');
+  console.error('No root!');
 }
