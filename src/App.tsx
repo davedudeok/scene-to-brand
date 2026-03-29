@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Vibrant from 'node-vibrant/browser';
+import * as Vibrant from 'node-vibrant/dist/browser';
 import PaletteManager from './PaletteManager';
 
 export default function App() {
@@ -19,7 +19,9 @@ export default function App() {
       reader.onload = async (e) => {
         try {
           const img = e.target?.result as string;
-          const v = new Vibrant(img);
+          // Vibrant is usually a named export or default depending on the build
+          const V = (Vibrant as any).default || Vibrant;
+          const v = new V(img);
           const palette = await v.getPalette();
           
           const colors = Object.values(palette)
