@@ -1,6 +1,28 @@
 import React, { useState } from 'react';
-import * as Vibrant from 'node-vibrant/dist/browser';
 import PaletteManager from './PaletteManager';
+
+// Using a lighter weight, CDN-friendly color thief or implementing a simple canvas-based one
+// to avoid the complex node-vibrant dependency issues in the browser build.
+const getDominantColors = async (imgSrc: string) => {
+  return new Promise<string[]>((resolve) => {
+    const img = new Image();
+    img.src = imgSrc;
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return resolve([]);
+      canvas.width = 100;
+      canvas.height = 100;
+      ctx.drawImage(img, 0, 0, 100, 100);
+      const data = ctx.getImageData(0, 0, 100, 100).data;
+      const colors = [];
+      for (let i = 0; i < data.length; i += 4) {
+        colors.push(`#${((1 << 24) + (data[i] << 16) + (data[i + 1] << 8) + data[i + 2]).toString(16).slice(1)}`);
+      }
+      resolve(colors.slice(0, 15));
+    };
+  });
+};
 
 export default function App() {
   const [baseColors, setBaseColors] = useState<string[]>([]);
@@ -14,32 +36,19 @@ export default function App() {
     setLoading(true);
     setError(null);
 
-    try {
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        try {
-          const img = e.target?.result as string;
-          // Dynamically import to ensure compatibility in browser
-          const { Vibrant } = await import('node-vibrant/browser');
-          const v = new Vibrant(img);
-          const palette = await v.getPalette();
-          
-          const colors = Object.values(palette)
-            .filter(swatch => swatch !== null)
-            .map(swatch => swatch!.getHex());
-            
-          setBaseColors(colors);
-        } catch (err) {
-          setError('Failed to process image. Please try another one.');
-        } finally {
-          setLoading(false);
-        }
-      };
-      reader.readAsDataURL(file);
-    } catch (err) {
-      setError('Error reading file.');
-      setLoading(false);
-    }
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      try {
+        const img = e.target?.result as string;
+        const colors = await getDominantColors(img);
+        setBaseColors(colors);
+      } catch (err) {
+        setError('Failed to process image.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   return (
