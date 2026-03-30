@@ -17,7 +17,7 @@ const getDominantColors = async (imgSrc: string) => {
       for (let i = 0; i < data.length; i += 4) {
         colors.push(`#${((1 << 24) + (data[i] << 16) + (data[i + 1] << 8) + data[i + 2]).toString(16).slice(1)}`);
       }
-      resolve(colors.slice(0, 15));
+      resolve([...new Set(colors)].slice(0, 15));
     };
   });
 };
@@ -50,7 +50,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFDFD] text-[#1A1A1A] font-light">
+    <main className="min-h-screen bg-[#FDFDFD] text-[#1A1A1A] font-light">
       <nav className="p-8 flex justify-between items-center border-b border-neutral-100">
         <h1 className="text-xl tracking-tighter uppercase">scene-to-brand</h1>
         <button className="text-xs uppercase tracking-widest hover:text-neutral-500">Support</button>
@@ -69,11 +69,10 @@ export default function App() {
       </section>
 
       {baseColors.length > 0 && (
-        <section className="px-8 pb-24">
+        <section className="px-8 pb-24 animate-in fade-in duration-1000">
           <PaletteManager baseColors={baseColors} />
         </section>
       )}
-    </div>
+    </main>
   );
 }
-EOF
